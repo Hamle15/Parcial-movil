@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:parcial/Pages2/home.dart';
-import 'package:parcial/Pages2/home1.dart';
-import 'package:parcial/Pages2/home3.dart';
+import 'package:parcial/Screens/temperature.dart';
+import 'package:parcial/Screens/physics.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -13,9 +12,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen>  {
 
   List pages = [
-    Home(),
-    Home1(),
-    Home3(),
+    TemperatureScreen(),
+    PhysicsScreen()
   ];
 
   int currentIndex = 0;
@@ -46,7 +44,6 @@ class _HomeScreenState extends State<HomeScreen>  {
           items: [
             BottomNavigationBarItem(label: 'Home',icon: Icon(Icons.apps)),
             BottomNavigationBarItem(label: 'XD',icon: Icon(Icons.apps)),
-            BottomNavigationBarItem(label: 'Elbillo',icon: Icon(Icons.table_bar)),
           ],
         ),
       ),

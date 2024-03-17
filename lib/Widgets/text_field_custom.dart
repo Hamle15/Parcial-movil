@@ -10,8 +10,6 @@ class TextFieldCustom extends StatelessWidget {
   final Widget? suffixIcon;
   final bool readOnly; // Hacer el TextField no editable
 
-
-
   const TextFieldCustom({Key? key,
     required this.controller,
     required this.keyboardType,

@@ -1,17 +1,17 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:parcial/Widgets/app_large_text.dart';
+import 'package:parcial/Widgets/convert_button.dart';
 import 'package:parcial/Widgets/text_field_custom.dart';
 
-class Home extends StatefulWidget {
+class TemperatureScreen extends StatefulWidget {
 
-  const Home({super.key});
+  const TemperatureScreen({super.key});
 
   @override
-  State<Home> createState() => _HomeState();
+  State<TemperatureScreen> createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> {
+class _HomeState extends State<TemperatureScreen> {
   final TextEditingController _celsiusController = TextEditingController();
   final TextEditingController _fahrenheitController = TextEditingController();
 
@@ -54,7 +54,6 @@ class _HomeState extends State<Home> {
     );
   }
 
-
   void _showResultDialog(double result) {
     showDialog(
       context: context,
@@ -74,7 +73,6 @@ class _HomeState extends State<Home> {
       },
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -106,7 +104,6 @@ class _HomeState extends State<Home> {
                   ),
                 ),
             ),
-
             SizedBox(height: 30),
             Container(
               margin: EdgeInsets.only(right: 20),
@@ -129,19 +126,11 @@ class _HomeState extends State<Home> {
                   ),
                   SizedBox(height: 20),
                   Center( // Puedes usar Row si prefieres
-                    child: ElevatedButton(
-                      onPressed: _convertCelsiusToFahrenheit,
-                      child: Text('Convertir'),
-                      style: ButtonStyle(
-                        // Aumenta el ancho mínimo del botón
-                        minimumSize: MaterialStateProperty.all(Size(150, 40)),
-                      ),
-                    ),
+                    child: ConvertButton(label: 'Convert', onPressed: _convertCelsiusToFahrenheit,),
                   ),
                 ],
               ),
             )
-
           ],
         ),
       ),
