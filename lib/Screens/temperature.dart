@@ -4,34 +4,31 @@ import 'package:parcial/Widgets/convert_button.dart';
 import 'package:parcial/Widgets/text_field_custom.dart';
 
 class TemperatureScreen extends StatefulWidget {
-
   const TemperatureScreen({super.key});
 
   @override
-  State<TemperatureScreen> createState() => _HomeState();
+  State<TemperatureScreen> createState() => _TemperatureScreenState();
 }
 
-class _HomeState extends State<TemperatureScreen> {
+class _TemperatureScreenState extends State<TemperatureScreen> {
   final TextEditingController _celsiusController = TextEditingController();
   final TextEditingController _fahrenheitController = TextEditingController();
 
-
-  void _convertCelsiusToFahrenheit() {
-    if (_celsiusController.text.isEmpty) {
-      _showErrorDialog('Por favor ingresa un valor para Celsius.');
-      return;
-    }
-
+  void _calculate() {
     double? celsius = double.tryParse(_celsiusController.text);
-    if (celsius == null) {
-      _showErrorDialog('Por favor ingresa un valor numérico válido para Celsius.');
-      return;
+    double? fahrenheit = double.tryParse(_fahrenheitController.text);
+
+    if (celsius != null) {
+      double converted = (celsius * 9 / 5) + 32;
+      _fahrenheitController.text = converted.toStringAsFixed(2);
+      _showResultDialog(converted, 'Fahrenheit');
+    } else if (fahrenheit != null) {
+      double converted = (fahrenheit - 32) * 5 / 9;
+      _celsiusController.text = converted.toStringAsFixed(2);
+      _showResultDialog(converted, 'Celsius');
+    } else {
+      _showErrorDialog('Please enter a valid value in Celsius or Fahrenheit.');
     }
-
-    double fahrenheit = (celsius * 9 / 5) + 32;
-    _fahrenheitController.text = fahrenheit.toStringAsFixed(2);
-
-    _showResultDialog(fahrenheit);
   }
 
   void _showErrorDialog(String message) {
@@ -46,7 +43,7 @@ class _HomeState extends State<TemperatureScreen> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text('Cerrar'),
+              child: const Text('Close'),
             ),
           ],
         );
@@ -54,13 +51,32 @@ class _HomeState extends State<TemperatureScreen> {
     );
   }
 
-  void _showResultDialog(double result) {
+  void _showResultDialog(double result, String unit) {
+    String unitText;
+    if (unit == 'Celsius') {
+      unitText = 'Celsius';
+    } else {
+      unitText = 'Fahrenheit';
+    }
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Resultant'),
-          content: Text('El resultant es: $result'),
+          title: const Text('Result'),
+          content: RichText(
+            text: TextSpan(
+              style: const TextStyle(color: Colors.black87),
+              children: [
+                const TextSpan(text: 'The conversion result is: '),
+                TextSpan(
+                  text: '$result $unitText',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const TextSpan(text: '.'),
+              ],
+            ),
+          ),
           actions: [
             TextButton(
               onPressed: () {
@@ -71,22 +87,19 @@ class _HomeState extends State<TemperatureScreen> {
           ],
         );
       },
-    );
+    ).then((_) {
+      _celsiusController.clear();
+      _fahrenheitController.clear();
+
+      // Remueve el foco del TextField
+      FocusScope.of(context).requestFocus(FocusNode());
+    });
   }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: const Padding(
-          padding: EdgeInsets.only(top: 5, left: 7),
-          child: Icon(
-            Icons.menu,
-            size: 30,
-            color: Colors.black54,
-          ),
-        ),
-      ),
       body: Container(
         margin: const EdgeInsets.only(left: 20),
         child: Column(
@@ -97,36 +110,35 @@ class _HomeState extends State<TemperatureScreen> {
             Container(
               padding: const EdgeInsets.only(left: 3),
               child: Text(
-                  "Convert your temperature to Celsius",
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 15,
-                  ),
+                "Convert your temperature to Celsius or Fahrenheit",
+                style: TextStyle(
+                  color: Colors.grey,
+                  fontSize: 15,
                 ),
+              ),
             ),
             SizedBox(height: 30),
             Container(
-              margin: EdgeInsets.only(right: 20),
+              margin: const EdgeInsets.only(right: 20),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch, // Asegura que los elementos se expandan horizontalmente
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   TextFieldCustom(
                     controller: _celsiusController,
                     keyboardType: TextInputType.number,
                     hintText: 'Celsius',
-                    prefixIcon: const Icon(Icons.email, color: Colors.grey),
+                    prefixIcon: const Icon(Icons.numbers, color: Colors.grey),
                   ),
                   SizedBox(height: 10),
                   TextFieldCustom(
                     controller: _fahrenheitController,
                     keyboardType: TextInputType.number,
                     hintText: 'Fahrenheit',
-                    prefixIcon: Icon(Icons.email, color: Colors.grey),
-                    readOnly: true,
+                    prefixIcon: Icon(Icons.numbers, color: Colors.grey),
                   ),
                   SizedBox(height: 20),
-                  Center( // Puedes usar Row si prefieres
-                    child: ConvertButton(label: 'Convert', onPressed: _convertCelsiusToFahrenheit,),
+                  Center(
+                    child: ConvertButton(label: 'Calculate', onPressed: _calculate),
                   ),
                 ],
               ),

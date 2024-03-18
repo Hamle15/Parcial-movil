@@ -86,16 +86,6 @@ class _PhysicsState extends State<PhysicsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: const Padding(
-          padding: EdgeInsets.only(top: 5, left: 7),
-          child: Icon(
-            Icons.menu,
-            size: 30,
-            color: Colors.black54,
-          ),
-        ),
-      ),
       body: Container(
         margin: const EdgeInsets.only(left: 20),
         child: Column(
